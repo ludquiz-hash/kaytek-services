@@ -1,0 +1,112 @@
+{
+  "name": "Serrurier Toulouse — Demande Avis Post-Intervention",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "serrurier-intervention-done",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-intervention",
+      "name": "Webhook — Intervention Terminée",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "Appeler ce webhook après chaque intervention : { phone, clientName, technicien }"
+    },
+    {
+      "parameters": {
+        "amount": 90,
+        "unit": "minutes"
+      },
+      "id": "wait-90min",
+      "name": "Attendre 90 minutes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "notes": "Délai optimal pour demander un avis : client rentré, satisfait"
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "resource": "sms",
+        "operation": "send",
+        "from": "SERRURIER",
+        "to": "={{ $json.phone }}",
+        "message": "=Bonjour {{ $json.clientName }},\n\nMerci de nous avoir fait confiance pour votre dépannage aujourd'hui.\n\nSi vous êtes satisfait(e) du service de {{ $json.technicien }}, un avis Google nous aiderait énormément :\n👉 {{ $env.GOOGLE_REVIEW_LINK }}\n\nMerci d'avance !",
+        "options": {}
+      },
+      "id": "sms-avis",
+      "name": "SMS — Demander Avis Google",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "columns": {
+          "value": {
+            "Statut": "Avis demandé",
+            "DateAvis": "={{ $now }}"
+          }
+        }
+      },
+      "id": "update-airtable",
+      "name": "Airtable — Mettre à jour statut",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Webhook — Intervention Terminée": {
+      "main": [
+        [
+          {
+            "node": "Attendre 90 minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attendre 90 minutes": {
+      "main": [
+        [
+          {
+            "node": "SMS — Demander Avis Google",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SMS — Demander Avis Google": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Mettre à jour statut",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["serrurier", "avis", "reputation"]
+}

@@ -1,0 +1,158 @@
+{
+  "name": "Serrurier Toulouse — Relance Leads Tièdes",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "cron-check",
+      "name": "Vérification toutes les heures",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "filterByFormula": "AND(Statut = 'Nouveau', DATETIME_DIFF(NOW(), Date, 'hours') >= 4, DATETIME_DIFF(NOW(), Date, 'hours') < 24)",
+        "sort": [
+          {
+            "field": "Date",
+            "direction": "asc"
+          }
+        ]
+      },
+      "id": "airtable-leads-tièdes",
+      "name": "Airtable — Leads sans suivi depuis 4h",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "check-has-leads",
+      "name": "Y a-t-il des leads à relancer ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "resource": "sms",
+        "operation": "send",
+        "from": "SERRURIER",
+        "to": "={{ $json.Téléphone }}",
+        "message": "=Bonjour, vous avez contacté notre service de serrurerie à Toulouse.\n\nVotre problème est-il résolu ? Si vous avez encore besoin d'un serrurier, nous sommes disponibles maintenant : {{ $env.SERRURIER_PHONE }}\n\nIntervention en 20-40 min, tarif annoncé à l'avance.",
+        "options": {}
+      },
+      "id": "sms-relance",
+      "name": "SMS — Relance Lead Tiède",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "columns": {
+          "value": {
+            "Statut": "Relancé"
+          }
+        }
+      },
+      "id": "update-statut-relancé",
+      "name": "Airtable — Marquer comme Relancé",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1100, 200]
+    }
+  ],
+  "connections": {
+    "Vérification toutes les heures": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Leads sans suivi depuis 4h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable — Leads sans suivi depuis 4h": {
+      "main": [
+        [
+          {
+            "node": "Y a-t-il des leads à relancer ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Y a-t-il des leads à relancer ?": {
+      "main": [
+        [
+          {
+            "node": "SMS — Relance Lead Tiède",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SMS — Relance Lead Tiède": {
+      "main": [
+        [
+          {
+            "node": "Airtable — Marquer comme Relancé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["serrurier", "relance", "leads"]
+}

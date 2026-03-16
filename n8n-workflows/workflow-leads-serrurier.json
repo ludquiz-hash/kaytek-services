@@ -1,0 +1,185 @@
+{
+  "name": "Serrurier Toulouse — Qualification Leads & Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "serrurier-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-lead",
+      "name": "Webhook — Nouveau Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "serrurier-lead-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.phone }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.address }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "filter-qualified",
+      "name": "Lead qualifié ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "resource": "sms",
+        "operation": "send",
+        "from": "SERRURIER",
+        "to": "={{ $env.SERRURIER_PHONE }}",
+        "message": "=🔐 NOUVEAU LEAD URGENT !\nProblème : {{ $json.problem }}\nAdresse : {{ $json.address }}\nTél client : {{ $json.phone }}\nHeure : {{ $json.timestamp }}\n\nAppelle immédiatement !",
+        "options": {}
+      },
+      "id": "sms-serrurier",
+      "name": "SMS — Alerter Serrurier",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "resource": "sms",
+        "operation": "send",
+        "from": "SERRURIER",
+        "to": "={{ $json.phone }}",
+        "message": "=Bonjour ! Votre demande d'intervention a bien été reçue. Notre serrurier vous rappelle dans les 5 minutes. En cas d'urgence extrême : {{ $env.SERRURIER_PHONE }}",
+        "options": {}
+      },
+      "id": "sms-client",
+      "name": "SMS — Confirmer Client",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $env.AIRTABLE_BASE_ID }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "Problème": "={{ $json.problem }}",
+            "Adresse": "={{ $json.address }}",
+            "Téléphone": "={{ $json.phone }}",
+            "Source": "={{ $json.source }}",
+            "Date": "={{ $json.timestamp }}",
+            "Statut": "Nouveau"
+          }
+        }
+      },
+      "id": "airtable-save",
+      "name": "Airtable — Sauvegarder Lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [680, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"status\": \"ok\", \"message\": \"Lead reçu\"}"
+      },
+      "id": "response-ok",
+      "name": "Réponse OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"status\": \"error\", \"message\": \"Données incomplètes\"}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "response-error",
+      "name": "Réponse Erreur",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 900]
+    }
+  ],
+  "connections": {
+    "Webhook — Nouveau Lead": {
+      "main": [
+        [
+          {
+            "node": "Lead qualifié ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead qualifié ?": {
+      "main": [
+        [
+          {
+            "node": "SMS — Alerter Serrurier",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SMS — Confirmer Client",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Airtable — Sauvegarder Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Réponse Erreur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SMS — Alerter Serrurier": {
+      "main": [
+        [
+          {
+            "node": "Réponse OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["serrurier", "leads", "toulouse"]
+}

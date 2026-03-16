@@ -1,87 +1,67 @@
-# Active Context: Next.js Starter Template
+# Active Context: Serrurier Urgence Toulouse — Site SEO Local
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Status**: ✅ Site complet déployable sur Netlify
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+Application Next.js 16 complète pour un service de serrurier d'urgence à Toulouse, orientée SEO local et génération de leads qualifiés en trafic 100% gratuit.
 
 ## Recently Completed
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+- [x] Landing page principale (`/`) — hero mobile-first, CTA appel, services, zones, avis, FAQ
+- [x] 4 pages services dynamiques (`/services/[slug]`) — contenu SEO complet par service
+- [x] 14 pages géographiques (`/serrurier/[slug]`) — contenu localisé par ville/zone
+- [x] Chatbot de qualification leads (`LeadChatbot.tsx`) — étapes problem/adresse/téléphone/confirm + webhook n8n
+- [x] Composants UI : Header, Footer, PhoneButton, TrustBadges, ReviewsSection, FAQSection
+- [x] Schema.org LocalBusiness + Service sur toutes les pages
+- [x] Sitemap.xml + robots.txt générés automatiquement
+- [x] Config centrale (`src/lib/config.ts`) — un seul fichier à modifier pour personnaliser
+- [x] 3 workflows n8n JSON exportables (leads, avis, relance)
+- [x] Page mentions légales
+- [x] Build production : 25 pages statiques générées ✓
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
+| `src/lib/config.ts` | Config centrale (nom, tel, zones, services) | ✅ À personnaliser |
+| `src/app/page.tsx` | Landing page principale | ✅ Ready |
+| `src/app/layout.tsx` | Layout global + schema.org + Header/Footer/Chatbot | ✅ Ready |
+| `src/app/services/[slug]/page.tsx` | Pages services (4 services) | ✅ Ready |
+| `src/app/serrurier/[slug]/page.tsx` | Pages géographiques (14 zones) | ✅ Ready |
+| `src/app/sitemap.ts` | Sitemap XML auto-généré | ✅ Ready |
+| `src/app/robots.ts` | Robots.txt | ✅ Ready |
+| `src/components/` | Tous les composants UI | ✅ Ready |
+| `n8n-workflows/` | 3 workflows n8n JSON | ✅ Ready |
+| `src/types/global.d.ts` | Types globaux (window.gtag) | ✅ Ready |
 
-## Current Focus
+## Business Context
 
-The template is ready. Next steps depend on user requirements:
+- **Activité** : Serrurier dépannage urgence Toulouse
+- **Objectif** : 2 appels qualifiés/jour en trafic 100% gratuit
+- **Canaux** : SEO local, Google Maps, contenu, annuaires
+- **Stack** : Next.js 16 + Tailwind CSS 4 + TypeScript + Netlify
 
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+## Personalisation requise
 
-## Quick Start Guide
+Avant déploiement, mettre à jour `src/lib/config.ts` :
+- `phone` et `phoneHref` → vrai numéro du serrurier
+- `name` → nom réel de l'entreprise
+- `email` → email réel
+- `googleReviewLink` → lien avis Google (récupérer depuis GBP)
+- `n8nWebhookUrl` → URL webhook n8n (via variable env NEXT_PUBLIC_N8N_WEBHOOK_URL)
 
-### To add a new page:
+## Variables d'environnement n8n requises
 
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
 ```
-
-### To add components:
-
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
+SERRURIER_PHONE=+336XXXXXXXX
+AIRTABLE_BASE_ID=appXXXXX
+GOOGLE_REVIEW_LINK=https://g.page/r/XXX/review
 ```
-
-### To add a database:
-
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
-
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
-| Initial | Template created with base setup |
+| Initial | Template Next.js créé |
+| 2026-03-16 | Site serrurier complet : landing, services, zones géo, chatbot leads, workflows n8n |
