@@ -4,7 +4,7 @@ import Link from "next/link";
 import PhoneButton from "@/components/PhoneButton";
 import TrustBadges from "@/components/TrustBadges";
 import FAQSection from "@/components/FAQSection";
-import { BUSINESS_CONFIG, SERVICE_ZONES, SERVICES } from "@/lib/config";
+import { BUSINESS_CONFIG, SERVICE_ZONES_UNIQUE, SERVICES } from "@/lib/config";
 
 // Données spécifiques par ville (repères locaux, délais estimés)
 const zoneData: Record<
@@ -87,26 +87,26 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return SERVICE_ZONES.map((z) => ({ slug: z.slug }));
+  return SERVICE_ZONES_UNIQUE.map((z) => ({ slug: z.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const zone = SERVICE_ZONES.find((z) => z.slug === slug);
+  const zone = SERVICE_ZONES_UNIQUE.find((z) => z.slug === slug);
   if (!zone) return {};
 
   return {
     title: `Serrurier Urgence ${zone.name} — Intervention rapide 24h/24`,
     description: `Serrurier d'urgence à ${zone.name}. Porte claquée, clé cassée, serrure bloquée. Intervention en ${zoneData[slug]?.delai || BUSINESS_CONFIG.interventionDelay}. Disponible ${BUSINESS_CONFIG.availability}. Appel : ${BUSINESS_CONFIG.phone}`,
     alternates: {
-      canonical: `https://serrurier-express-toulouse.fr/serrurier/${slug}`,
+      canonical: `https://www.kaytek-services.fr/serrurier-urgence/${slug}`,
     },
   };
 }
 
 export default async function ZonePage({ params }: PageProps) {
   const { slug } = await params;
-  const zone = SERVICE_ZONES.find((z) => z.slug === slug);
+  const zone = SERVICE_ZONES_UNIQUE.find((z) => z.slug === slug);
   const data = zoneData[slug];
 
   if (!zone) {
@@ -149,7 +149,7 @@ export default async function ZonePage({ params }: PageProps) {
     },
   ];
 
-  const otherZones = SERVICE_ZONES.filter((z) => z.slug !== slug).slice(0, 6);
+  const otherZones = SERVICE_ZONES_UNIQUE.filter((z) => z.slug !== slug).slice(0, 6);
 
   return (
     <>
@@ -211,7 +211,7 @@ export default async function ZonePage({ params }: PageProps) {
             </p>
             <p>
               Basés à Toulouse, nous couvrons{" "}
-              <strong>{zone.name} ({zone.arrondissement} de Toulouse)</strong> avec
+               <strong>{zone.name} ({zone.centre === "Toulouse" ? "région Toulouse" : "secteur Baziège"})</strong> avec
               un délai moyen d&apos;intervention de <strong>{delai}</strong>. Nous
               intervenons <strong>{BUSINESS_CONFIG.availability}</strong>, y compris
               la nuit, les week-ends et les jours fériés.

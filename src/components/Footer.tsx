@@ -1,21 +1,23 @@
 import Link from "next/link";
-import { BUSINESS_CONFIG, SERVICE_ZONES, SERVICES } from "@/lib/config";
+import { BUSINESS_CONFIG, ZONES_TOULOUSE, ZONES_BAZIEGE, SERVICES } from "@/lib/config";
 
 export default function Footer() {
-  const mainZones = SERVICE_ZONES.slice(0, 8);
   const year = new Date().getFullYear();
+  const toulousePreview = ZONES_TOULOUSE.slice(0, 10);
+  const baziegePreview = ZONES_BAZIEGE.slice(0, 10);
 
   return (
     <footer className="bg-gray-900 text-gray-300 pt-12 pb-6">
       <div className="max-w-5xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+
           {/* Bloc entreprise */}
-          <div>
+          <div className="md:col-span-1">
             <h3 className="text-white font-bold text-lg mb-3">
               {BUSINESS_CONFIG.name}
             </h3>
             <p className="text-sm leading-relaxed mb-3">
-              Serrurier agréé à Toulouse. Intervention rapide{" "}
+              Serrurier agréé à Toulouse et Baziège. Intervention{" "}
               {BUSINESS_CONFIG.interventionDelay},{" "}
               {BUSINESS_CONFIG.availability}.
             </p>
@@ -29,7 +31,7 @@ export default function Footer() {
 
           {/* Nos services */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">Nos services</h3>
+            <h3 className="text-white font-bold text-base mb-3">Nos services</h3>
             <ul className="space-y-1 text-sm">
               {SERVICES.map((s) => (
                 <li key={s.slug}>
@@ -44,24 +46,79 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Zones intervention */}
+          {/* Zone Toulouse */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">
-              Zones d&apos;intervention
+            <h3 className="text-white font-bold text-base mb-3">
+              Zone Toulouse (20 km)
             </h3>
-            <ul className="space-y-1 text-sm columns-2">
-              {mainZones.map((z) => (
+            <ul className="space-y-1 text-xs">
+              {toulousePreview.map((z) => (
                 <li key={z.slug}>
                   <Link
-                    href={`/serrurier/${z.slug}`}
+                    href={`/serrurier-urgence/${z.slug}`}
                     className="hover:text-orange-400 transition-colors"
                   >
                     {z.name}
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/#zones" className="text-orange-400 hover:text-orange-300 text-xs">
+                  Voir toutes les villes →
+                </Link>
+              </li>
             </ul>
           </div>
+
+          {/* Zone Baziège */}
+          <div>
+            <h3 className="text-white font-bold text-base mb-3">
+              Zone Baziège (20 km)
+            </h3>
+            <ul className="space-y-1 text-xs">
+              {baziegePreview.map((z) => (
+                <li key={z.slug}>
+                  <Link
+                    href={`/serrurier-urgence/${z.slug}`}
+                    className="hover:text-orange-400 transition-colors"
+                  >
+                    {z.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/#zones" className="text-orange-400 hover:text-orange-300 text-xs">
+                  Voir toutes les villes →
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bloc zones complètes — bon pour le SEO */}
+        <div className="border-t border-gray-700 pt-6 mb-6">
+          <p className="text-xs text-gray-500 leading-relaxed">
+            <strong className="text-gray-400">Zones d&apos;intervention Toulouse :</strong>{" "}
+            {ZONES_TOULOUSE.map((z, i) => (
+              <span key={z.slug}>
+                <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400">
+                  {z.name}
+                </Link>
+                {i < ZONES_TOULOUSE.length - 1 && ", "}
+              </span>
+            ))}
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed mt-2">
+            <strong className="text-gray-400">Zones d&apos;intervention Baziège :</strong>{" "}
+            {ZONES_BAZIEGE.map((z, i) => (
+              <span key={z.slug}>
+                <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400">
+                  {z.name}
+                </Link>
+                {i < ZONES_BAZIEGE.length - 1 && ", "}
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-gray-500">

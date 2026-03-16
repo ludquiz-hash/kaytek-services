@@ -13,21 +13,24 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: {
-    default: `Serrurier Urgence Toulouse — Intervention ${BUSINESS_CONFIG.interventionDelay} — ${BUSINESS_CONFIG.availability}`,
+    default: `${BUSINESS_CONFIG.name} — Serrurier Urgence Toulouse & Baziège — ${BUSINESS_CONFIG.availability}`,
     template: `%s | ${BUSINESS_CONFIG.name}`,
   },
-  description: `Serrurier d'urgence à Toulouse. Intervention en ${BUSINESS_CONFIG.interventionDelay}, ${BUSINESS_CONFIG.availability}. Porte claquée, clé cassée, serrure bloquée. Devis gratuit. ${BUSINESS_CONFIG.phone}`,
+  description: `${BUSINESS_CONFIG.name}, serrurier à Toulouse et Baziège. Dépannage serrurier, ouverture de porte, changement de serrure et sécurisation ${BUSINESS_CONFIG.availability} autour de Toulouse et Baziège.`,
   keywords: [
     "serrurier urgence Toulouse",
     "serrurier Toulouse",
+    "serrurier Baziège",
     "ouverture porte claquée Toulouse",
     "serrurier 24h Toulouse",
-    "serrurier pas cher Toulouse",
+    "Kaytek Services",
+    "serrurier Haute-Garonne",
   ],
   openGraph: {
     type: "website",
     locale: "fr_FR",
     siteName: BUSINESS_CONFIG.name,
+    url: BUSINESS_CONFIG.website,
   },
   robots: {
     index: true,
@@ -44,13 +47,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Schema.org LocalBusiness
+  // Schema.org LocalBusiness — 2 centres de service
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "Locksmith",
     name: BUSINESS_CONFIG.name,
     telephone: BUSINESS_CONFIG.phone,
     email: BUSINESS_CONFIG.email,
+    url: BUSINESS_CONFIG.website,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Toulouse",
@@ -67,13 +71,8 @@ export default function RootLayout({
       {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
+          "Monday", "Tuesday", "Wednesday", "Thursday",
+          "Friday", "Saturday", "Sunday",
         ],
         opens: "00:00",
         closes: "23:59",
@@ -81,15 +80,10 @@ export default function RootLayout({
     ],
     priceRange: "€€",
     areaServed: [
-      "Toulouse",
-      "Blagnac",
-      "Colomiers",
-      "Ramonville-Saint-Agne",
-      "Balma",
-      "Tournefeuille",
-      "Muret",
+      "Toulouse", "Blagnac", "Colomiers", "Tournefeuille",
+      "Baziège", "Ayguesvives", "Montgiscard", "Villefranche-de-Lauragais",
     ],
-    description: `Serrurier d'urgence à Toulouse. Intervention en ${BUSINESS_CONFIG.interventionDelay}, ${BUSINESS_CONFIG.availability}.`,
+    description: `${BUSINESS_CONFIG.name}, serrurier d'urgence à Toulouse et Baziège. Intervention en ${BUSINESS_CONFIG.interventionDelay}, ${BUSINESS_CONFIG.availability}.`,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: "4.9",
