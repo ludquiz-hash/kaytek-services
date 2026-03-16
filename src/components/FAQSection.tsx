@@ -31,7 +31,7 @@ const defaultFAQ: FAQItem[] = [
   },
   {
     question: "Quelles sont vos garanties de sérieux ?",
-    answer: `${BUSINESS_CONFIG.name} est une entreprise déclarée, inscrite au registre du commerce. Nous vous communiquons systématiquement le tarif définitif AVANT de commencer l'intervention — sans mauvaise surprise. Une facture détaillée vous est remise à la fin de chaque intervention. Vous pouvez vérifier nos avis clients Google avant de faire appel à nous.`,
+    answer: `Nous vous communiquons systématiquement le tarif définitif AVANT de commencer l'intervention — sans mauvaise surprise. Une facture détaillée vous est remise à la fin de chaque intervention. Vous pouvez vérifier nos avis clients Google avant de faire appel à nous.`,
   },
   {
     question: "Quelles serrures pouvez-vous remplacer ou installer ?",
