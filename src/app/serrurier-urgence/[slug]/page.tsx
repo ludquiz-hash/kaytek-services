@@ -75,8 +75,8 @@ export default async function LocalPage({ params }: PageProps) {
     priceRange: "€€",
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "127",
+      ratingValue: "5",
+      reviewCount: "16",
       bestRating: "5",
     },
   };

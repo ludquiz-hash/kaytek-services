@@ -26,12 +26,12 @@ const defaultFAQ: FAQItem[] = [
     answer: `Oui, nous intervenons ${BUSINESS_CONFIG.availability}. Le tarif de nuit (entre 20h et 8h), week-end et jours fériés peut faire l'objet d'un supplément, toujours annoncé avant intervention.`,
   },
   {
-    question: "Pouvez-vous ouvrir une porte sans l'abîmer ?",
-    answer: "Dans la grande majorité des cas (porte claquée, serrure non forcée), nous ouvrons sans aucune casse grâce à des techniques de crochetage professionnel. Si la porte a été forcée ou la serrure endommagée, un remplacement du cylindre peut être nécessaire.",
+    question: "Comment se passe une ouverture de porte ?",
+    answer: "Dès votre appel, notre serrurier se déplace avec le matériel adapté à votre type de serrure. Sur place, il évalue la situation et choisit la méthode la moins invasive possible. Dans la majorité des cas de porte claquée, la porte est ouverte rapidement et sans dommage. Si la serrure est endommagée, nous proposons un remplacement sur place.",
   },
   {
-    question: "Comment savoir si vous n'êtes pas un serrurier arnaqueur ?",
-    answer: "Nous sommes un serrurier agréé, inscrit au registre du commerce, et nous annonçons systématiquement le tarif définitif AVANT de commencer l'intervention. Nous vous remettons une facture détaillée. Méfiez-vous des serruriers qui refusent de donner un prix à l'avance.",
+    question: "Quelles sont vos garanties de sérieux ?",
+    answer: `${BUSINESS_CONFIG.name} est une entreprise déclarée, inscrite au registre du commerce. Nous vous communiquons systématiquement le tarif définitif AVANT de commencer l'intervention — sans mauvaise surprise. Une facture détaillée vous est remise à la fin de chaque intervention. Vous pouvez vérifier nos avis clients Google avant de faire appel à nous.`,
   },
   {
     question: "Quelles serrures pouvez-vous remplacer ou installer ?",

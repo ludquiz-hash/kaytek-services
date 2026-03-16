@@ -20,7 +20,7 @@ const serviceDetails: Record<
 > = {
   "ouverture-porte-claquee-toulouse": {
     h1: "Ouverture de porte claquée à Toulouse — Serrurier 24h/24",
-    intro: `Vous avez claqué votre porte avec les clés à l'intérieur ? C'est l'une des situations les plus fréquentes auxquelles nous répondons à Toulouse. Notre serrurier intervient en ${BUSINESS_CONFIG.interventionDelay}, sans casse dans la grande majorité des cas, et vous communique le tarif définitif avant de commencer.`,
+    intro: `Vous avez claqué votre porte avec les clés à l'intérieur ? C'est l'une des situations les plus fréquentes auxquelles nous répondons à Toulouse. Notre serrurier intervient en ${BUSINESS_CONFIG.interventionDelay}, avec le matériel adapté à votre type de serrure, et vous communique le tarif définitif avant de commencer.`,
     steps: [
       {
         title: "Appelez-nous",
@@ -28,7 +28,7 @@ const serviceDetails: Record<
       },
       {
         title: "Intervention rapide",
-        desc: `Arrivée en ${BUSINESS_CONFIG.interventionDelay}. Le serrurier évalue la serrure et utilise les techniques de crochetage ou de décodage adaptées pour ouvrir sans casse.`,
+        desc: `Arrivée en ${BUSINESS_CONFIG.interventionDelay}. Le serrurier évalue votre serrure et utilise la méthode adaptée à votre type de porte pour intervenir avec un minimum de dommages.`,
       },
       {
         title: "Ouverture & conseil",
@@ -37,7 +37,7 @@ const serviceDetails: Record<
     ],
     why: [
       `Intervention en ${BUSINESS_CONFIG.interventionDelay} sur Toulouse`,
-      "Ouverture sans casse dans +90% des cas",
+      "Intervention soignée, minimum de dommages",
       "Tarif annoncé avant intervention — aucune surprise",
       `Disponible ${BUSINESS_CONFIG.availability}`,
       "Serrurier agréé, facture détaillée remise",
@@ -55,9 +55,9 @@ const serviceDetails: Record<
         answer: `L'ouverture d'une porte claquée commence à partir de ${BUSINESS_CONFIG.priceFrom}€. Le tarif exact dépend du type de serrure, de l'heure (nuit/week-end) et de la complexité. Nous l'annonçons toujours avant intervention.`,
       },
       {
-        question: "Ma serrure sera-t-elle abîmée après l'intervention ?",
+        question: "Faut-il remplacer la serrure après une ouverture de porte ?",
         answer:
-          "Dans la grande majorité des cas de porte claquée (serrure non forcée, non endommagée), nous ouvrons sans aucune casse ni remplacement nécessaire. Si votre cylindre est déjà usé ou endommagé, nous pouvons le remplacer sur place.",
+          "Pas systématiquement. Si votre serrure est en bon état et que la porte s'est simplement claquée, aucun remplacement n'est nécessaire après l'intervention. En revanche, si le cylindre est usé ou endommagé, nous pouvons le remplacer sur place lors de la même visite.",
       },
       {
         question: "Intervenez-vous dans tout Toulouse ?",

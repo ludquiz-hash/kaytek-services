@@ -38,7 +38,7 @@ export default function ReviewsSection() {
             ★★★★★
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2">
-            4.9/5 — Plus de 120 avis clients Google
+            5/5 — 16 avis clients Google
           </h2>
           <p className="text-gray-500">
             Serrurier de confiance plébiscité par les Toulousains

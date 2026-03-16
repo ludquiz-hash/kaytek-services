@@ -86,8 +86,8 @@ export default function RootLayout({
     description: `${BUSINESS_CONFIG.name}, serrurier d'urgence à Toulouse et Baziège. Intervention en ${BUSINESS_CONFIG.interventionDelay}, ${BUSINESS_CONFIG.availability}.`,
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "127",
+      ratingValue: "5",
+      reviewCount: "16",
       bestRating: "5",
     },
   };
