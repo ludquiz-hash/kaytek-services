@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PhoneButton from "@/components/PhoneButton";
 import TrustBadges from "@/components/TrustBadges";
-import ReviewsSection from "@/components/ReviewsSection";
+import GoogleReviews from "@/components/GoogleReviews";
 import FAQSection from "@/components/FAQSection";
 import { BUSINESS_CONFIG, SERVICE_ZONES_UNIQUE, ZONES_TOULOUSE, ZONES_BAZIEGE, SERVICES } from "@/lib/config";
 
@@ -172,8 +172,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* AVIS */}
-      <ReviewsSection />
+      {/* AVIS GOOGLE EN TEMPS RÉEL */}
+      <GoogleReviews />
 
       {/* FAQ */}
       <FAQSection />
