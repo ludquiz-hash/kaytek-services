@@ -1,0 +1,115 @@
+{
+  "name": "Kaytek — Workflow 1 : Lead Temps Réel",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kaytek-chat-lead",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-chat",
+      "name": "Webhook Chat/Formulaire",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.kaytek-services.fr/api/agents/chat-monitor",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "message", "value": "={{ $json.message }}" },
+            { "name": "session_id", "value": "={{ $json.session_id }}" }
+          ]
+        }
+      },
+      "id": "chat-monitor",
+      "name": "CHAT_MONITOR — Qualifier",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.kaytek-services.fr/api/agents/kaytek-urgence",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "message", "value": "={{ $json.message }}" },
+            { "name": "canal", "value": "chat" }
+          ]
+        }
+      },
+      "id": "kaytek-urgence",
+      "name": "KAYTEK_URGENCE — Scorer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{ $json.score }}", "operation": "largerEqual", "value2": 7 }
+          ]
+        }
+      },
+      "id": "if-urgence",
+      "name": "Score >= 7 ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.kaytek-services.fr/api/agents/telegram-agent",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "mode", "value": "urgence" },
+            { "name": "prenom", "value": "={{ $('KAYTEK_URGENCE — Scorer').item.json.localisation }}" },
+            { "name": "adresse", "value": "={{ $('CHAT_MONITOR — Qualifier').item.json.lead_detecte.adresse }}" },
+            { "name": "probleme", "value": "={{ $json.probleme }}" },
+            { "name": "telephone", "value": "={{ $('CHAT_MONITOR — Qualifier').item.json.lead_detecte.telephone }}" },
+            { "name": "score", "value": "={{ $json.score }}" },
+            { "name": "canal", "value": "chat" }
+          ]
+        }
+      },
+      "id": "telegram-alert",
+      "name": "TELEGRAM_AGENT — Alerter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ok: true, score: $('KAYTEK_URGENCE — Scorer').item.json.score, action: $('KAYTEK_URGENCE — Scorer').item.json.action, reponse: $('CHAT_MONITOR — Qualifier').item.json.reponse_chat}) }}"
+      },
+      "id": "response-ok",
+      "name": "Réponse OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Chat/Formulaire": { "main": [[{ "node": "CHAT_MONITOR — Qualifier", "type": "main", "index": 0 }]] },
+    "CHAT_MONITOR — Qualifier": { "main": [[{ "node": "KAYTEK_URGENCE — Scorer", "type": "main", "index": 0 }]] },
+    "KAYTEK_URGENCE — Scorer": { "main": [[{ "node": "Score >= 7 ?", "type": "main", "index": 0 }]] },
+    "Score >= 7 ?": {
+      "main": [
+        [{ "node": "TELEGRAM_AGENT — Alerter", "type": "main", "index": 0 }],
+        [{ "node": "Réponse OK", "type": "main", "index": 0 }]
+      ]
+    },
+    "TELEGRAM_AGENT — Alerter": { "main": [[{ "node": "Réponse OK", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": ["kaytek", "urgence", "leads", "temps-reel"]
+}

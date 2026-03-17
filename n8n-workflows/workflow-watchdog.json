@@ -1,0 +1,88 @@
+{
+  "name": "Kaytek — Workflow 3 : Watchdog Système 24/7",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 1 }]
+        }
+      },
+      "id": "cron-horaire",
+      "name": "Vérification toutes les heures",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.kaytek-services.fr/api/agents/kaytek-urgence",
+        "method": "GET"
+      },
+      "id": "check-urgence",
+      "name": "Check KAYTEK_URGENCE",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://www.kaytek-services.fr/api/agents/kaytek-avis",
+        "method": "GET"
+      },
+      "id": "check-avis",
+      "name": "Check KAYTEK_AVIS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{ $('Check KAYTEK_URGENCE').item.json ? 1 : 0 }}", "operation": "equal", "value2": 0 }
+          ]
+        }
+      },
+      "id": "if-erreur",
+      "name": "Erreur détectée ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.kaytek-services.fr/api/agents/telegram-agent",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "mode", "value": "urgence" },
+            { "name": "prenom", "value": "SYSTÈME" },
+            { "name": "adresse", "value": "kaytek-services.fr" },
+            { "name": "probleme", "value": "⚠️ Agent IA indisponible — vérification requise" },
+            { "name": "telephone", "value": "05 82 95 17 42" },
+            { "name": "score", "value": 5 },
+            { "name": "canal", "value": "watchdog" }
+          ]
+        }
+      },
+      "id": "alerte-erreur",
+      "name": "Alerter erreur sur Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [900, 200]
+    }
+  ],
+  "connections": {
+    "Vérification toutes les heures": {
+      "main": [[
+        { "node": "Check KAYTEK_URGENCE", "type": "main", "index": 0 },
+        { "node": "Check KAYTEK_AVIS", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check KAYTEK_URGENCE": { "main": [[{ "node": "Erreur détectée ?", "type": "main", "index": 0 }]] },
+    "Erreur détectée ?": { "main": [[{ "node": "Alerter erreur sur Telegram", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": ["kaytek", "watchdog", "monitoring"]
+}

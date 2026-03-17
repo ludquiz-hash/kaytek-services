@@ -1,0 +1,53 @@
+{
+  "name": "Kaytek — Workflow 2 : Rapport Journalier 20h",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 20 * * *" }]
+        }
+      },
+      "id": "cron-20h",
+      "name": "Cron 20h00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "Déclenché tous les jours à 20h"
+    },
+    {
+      "parameters": {
+        "url": "https://www.kaytek-services.fr/api/agents/daily-report?secret={{ $env.CRON_SECRET }}",
+        "method": "GET"
+      },
+      "id": "daily-report",
+      "name": "DAILY_REPORT_AGENT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.kaytek-services.fr/api/agents/cron?secret={{ $env.CRON_SECRET }}&task=daily_analysis",
+        "method": "GET"
+      },
+      "id": "daily-analysis",
+      "name": "Analyse Quotidienne 6h",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [460, 480],
+      "notes": "Exécuté en parallèle"
+    }
+  ],
+  "connections": {
+    "Cron 20h00": {
+      "main": [
+        [
+          { "node": "DAILY_REPORT_AGENT", "type": "main", "index": 0 },
+          { "node": "Analyse Quotidienne 6h", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": ["kaytek", "rapport", "cron"]
+}
