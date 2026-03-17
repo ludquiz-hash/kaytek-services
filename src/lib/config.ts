@@ -135,7 +135,7 @@ export const SERVICES = [
     name: "Ouverture de porte claquée",
     slug: "ouverture-porte-claquee",
     icon: "🔑",
-    description: "Porte fermée sans clé, clé oubliée à l'intérieur — intervention rapide sans casse.",
+    description: "Porte fermée sans clé, clé oubliée à l'intérieur — intervention rapide avec le matériel adapté.",
     price: "à partir de 89€",
   },
   {

@@ -3,7 +3,7 @@ const reviews = [
     name: "Marie T.",
     city: "Toulouse",
     note: 5,
-    text: "Porte claquée un dimanche soir à 22h. Appelé, arrivé en 25 minutes, ouverture sans casse en 5 minutes. Tarif annoncé au téléphone respecté. Je recommande vivement !",
+    text: "Porte claquée un dimanche soir à 22h. Appelé, arrivé en 25 minutes, porte ouverte en 5 minutes. Tarif annoncé au téléphone respecté. Je recommande vivement !",
     service: "Ouverture porte claquée",
   },
   {

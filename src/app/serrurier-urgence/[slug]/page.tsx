@@ -96,7 +96,7 @@ export default async function LocalPage({ params }: PageProps) {
     },
     {
       question: `Pouvez-vous ouvrir une porte sans l'abîmer à ${zone.name} ?`,
-      answer: `Dans la très grande majorité des cas de porte claquée à ${zone.name}, notre serrurier ouvre sans casse grâce aux techniques de crochetage professionnel. Si la serrure est endommagée, nous proposons un remplacement sur place.`,
+      answer: `Dans la très grande majorité des cas de porte claquée à ${zone.name}, notre serrurier intervient avec le matériel adapté à votre type de serrure pour ouvrir avec un minimum de dommages. Si la serrure est endommagée, nous proposons un remplacement sur place.`,
     },
   ];
 

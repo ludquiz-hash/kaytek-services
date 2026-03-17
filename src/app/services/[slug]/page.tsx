@@ -70,7 +70,7 @@ const serviceDetails: Record<
       "@type": "Service",
       name: "Ouverture de porte claquée Toulouse",
       description:
-        "Service d'ouverture de porte claquée à Toulouse, disponible 24h/24 7j/7. Intervention rapide sans casse.",
+        "Service d'ouverture de porte claquée à Toulouse, disponible 24h/24 7j/7. Intervention rapide avec le matériel adapté.",
       provider: {
         "@type": "Locksmith",
         name: BUSINESS_CONFIG.name,
@@ -91,7 +91,7 @@ const serviceDetails: Record<
       },
       {
         title: "Extraction professionnelle",
-        desc: "Avec des outils spécialisés, notre serrurier extrait le morceau de clé cassé du barillet en quelques minutes, sans abîmer la serrure dans la majorité des cas.",
+        desc: "Avec des outils spécialisés, notre serrurier extrait le morceau de clé cassé du barillet en quelques minutes, en préservant la serrure dans la majorité des cas.",
       },
       {
         title: "Remplacement si nécessaire",

@@ -27,7 +27,7 @@ const defaultFAQ: FAQItem[] = [
   },
   {
     question: "Comment se passe une ouverture de porte ?",
-    answer: "Dès votre appel, notre serrurier se déplace avec le matériel adapté à votre type de serrure. Sur place, il évalue la situation et choisit la méthode la moins invasive possible. Dans la majorité des cas de porte claquée, la porte est ouverte rapidement et sans dommage. Si la serrure est endommagée, nous proposons un remplacement sur place.",
+    answer: "Dès votre appel, notre serrurier se déplace avec le matériel adapté à votre type de serrure. Sur place, il évalue la situation et choisit la méthode la mieux adaptée. Dans la majorité des cas de porte claquée, la porte est ouverte rapidement avec un minimum d'impact. Si la serrure est endommagée, nous proposons un remplacement sur place.",
   },
   {
     question: "Quelles sont vos garanties de sérieux ?",
