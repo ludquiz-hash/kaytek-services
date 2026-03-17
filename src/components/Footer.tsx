@@ -2,15 +2,6 @@ import Link from "next/link";
 import { ZONES_TOULOUSE, ZONES_BAZIEGE, SERVICES } from "@/lib/config";
 import { PHONE_DISPLAY, PHONE_HREF } from "@/lib/phone";
 
-const ANNUAIRES = [
-  { name: "Pages Jaunes", url: "https://www.pagesjaunes.fr" },
-  { name: "Yelp", url: "https://www.yelp.fr" },
-  { name: "Habitissimo", url: "https://www.habitissimo.fr" },
-  { name: "Houzz", url: "https://www.houzz.fr" },
-  { name: "Hoodspot", url: "https://hoodspot.fr" },
-  { name: "Numéro de rue", url: "https://www.numeroderue.com" },
-];
-
 export default function Footer() {
   const year = new Date().getFullYear();
   const toulousePreview = ZONES_TOULOUSE.slice(0, 10);
@@ -82,26 +73,6 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
-        </div>
-
-        {/* ── Section annuaires (P5) ── */}
-        <div className="border-t border-gray-700 pt-6 mb-6">
-          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-3">
-            Retrouvez-nous sur
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {ANNUAIRES.map((a) => (
-              <a
-                key={a.name}
-                href={a.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-gray-500 hover:text-orange-400 border border-gray-700 hover:border-orange-500 px-2.5 py-1 rounded-lg transition-colors"
-              >
-                {a.name}
-              </a>
-            ))}
           </div>
         </div>
 
