@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PhoneButton, { PHONE_DISPLAY, PHONE_HREF } from "@/components/PhoneButton";
+import PhoneButton from "@/components/PhoneButton";
+import { PHONE_DISPLAY, PHONE_HREF } from "@/lib/phone";
 import TrustBadges from "@/components/TrustBadges";
 import GoogleReviews from "@/components/GoogleReviews";
 import FAQSection from "@/components/FAQSection";

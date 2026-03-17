@@ -26,11 +26,33 @@ export const metadata: Metadata = {
     "Kaytek Services",
     "serrurier Haute-Garonne",
   ],
+  // ── Icônes ──
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png",      sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png",      sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon-32x32.png",
+  },
+  // ── Open Graph ──
   openGraph: {
     type: "website",
     locale: "fr_FR",
     siteName: "Kaytek Services",
     url: "https://www.kaytek-services.fr",
+    images: [
+      {
+        url: "/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "Kaytek Services — Serrurier Urgence Toulouse",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };
@@ -38,7 +60,6 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // Schema JSON-LD exact demandé
   const schema = {
     "@context": "https://schema.org",
     "@type": "Locksmith",
@@ -69,12 +90,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KTL57CZR');`,
           }}
         />
-
         {/* ── Google Ads / gtag ── */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=AW-11416158362"
-        />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11416158362" />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];
@@ -86,7 +103,6 @@ gtag('config', 'AW-11416158362/nRUOCMuhqc0bEJqB08Mq', {
 });`,
           }}
         />
-
         {/* ── Schema JSON-LD ── */}
         <script
           type="application/ld+json"

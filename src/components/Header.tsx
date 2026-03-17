@@ -1,5 +1,7 @@
 import Link from "next/link";
-import PhoneButton, { PHONE_DISPLAY, PHONE_HREF } from "./PhoneButton";
+import Image from "next/image";
+import PhoneButton from "./PhoneButton";
+import { PHONE_DISPLAY, PHONE_HREF } from "@/lib/phone";
 
 export default function Header() {
   return (
@@ -10,17 +12,27 @@ export default function Header() {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Logo / nom */}
-        <Link href="/" className="flex flex-col leading-tight flex-shrink-0">
-          <span className="text-xl font-black text-white tracking-tight">
-            Kaytek Services
-          </span>
-          <span className="text-orange-400 text-xs font-semibold">
-            Serrurier urgence · Toulouse &amp; Baziège
-          </span>
-          </Link>
+        {/* Logo + nom */}
+        <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+          <Image
+            src="/logo.png"
+            alt="Kaytek Services — Serrurier Toulouse"
+            width={44}
+            height={44}
+            className="rounded-xl"
+            priority
+          />
+          <div className="flex flex-col leading-tight">
+            <span className="text-xl font-black text-white tracking-tight">
+              Kaytek Services
+            </span>
+            <span className="text-orange-400 text-xs font-semibold">
+              Serrurier urgence · Toulouse &amp; Baziège
+            </span>
+          </div>
+        </Link>
 
-          {/* Numéro + bouton — visibles immédiatement */}
+        {/* Numéro + bouton — visibles immédiatement */}
         <div className="flex items-center gap-3">
           <a
             href={PHONE_HREF}

@@ -1,8 +1,9 @@
 "use client";
 
-// Numéro hardcodé — le tracking conversion GTM se déclenche automatiquement sur tel:
-export const PHONE_DISPLAY = "05 82 95 17 42";
-export const PHONE_HREF = "tel:0582951742";
+import { PHONE_DISPLAY, PHONE_HREF } from "@/lib/phone";
+
+// Ré-export pour les composants qui l'importaient depuis ici
+export { PHONE_DISPLAY, PHONE_HREF };
 
 interface PhoneButtonProps {
   variant?: "primary" | "secondary" | "ghost";
@@ -28,12 +29,9 @@ export default function PhoneButton({
     "inline-flex items-center justify-center gap-2 font-black rounded-xl transition-all duration-150 active:scale-95 focus:outline-none focus:ring-4 focus:ring-orange-300 cursor-pointer";
 
   const variants = {
-    primary:
-      "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl",
-    secondary:
-      "bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500",
-    ghost:
-      "bg-transparent hover:bg-white/10 text-white border-2 border-white",
+    primary: "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl",
+    secondary: "bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500",
+    ghost: "bg-transparent hover:bg-white/10 text-white border-2 border-white",
   };
 
   const sizes = {
@@ -44,10 +42,7 @@ export default function PhoneButton({
   };
 
   return (
-    <a
-      href={PHONE_HREF}
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
-    >
+    <a href={PHONE_HREF} className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>
       {displayText}
     </a>
   );
