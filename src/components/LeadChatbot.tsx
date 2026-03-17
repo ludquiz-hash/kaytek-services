@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { BUSINESS_CONFIG } from "@/lib/config";
 
+// Étapes : problem → prenom → address → phone → confirm → done
 type Step =
   | "welcome"
   | "problem"
+  | "prenom"
   | "address"
   | "phone"
   | "confirm"
@@ -13,6 +15,7 @@ type Step =
 
 interface LeadData {
   problem: string;
+  prenom: string;
   address: string;
   phone: string;
 }
@@ -30,16 +33,28 @@ export default function LeadChatbot() {
   const [step, setStep] = useState<Step>("welcome");
   const [lead, setLead] = useState<LeadData>({
     problem: "",
+    prenom: "",
     address: "",
     phone: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  // Étape 1 : choix du problème
   const handleProblemSelect = (value: string) => {
     setLead({ ...lead, problem: value });
+    setStep("prenom");
+  };
+
+  // Étape 2 : prénom (fortement encouragé, fallback "Client")
+  const handlePrenomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const val = (form.elements.namedItem("prenom") as HTMLInputElement).value.trim();
+    setLead({ ...lead, prenom: val || "Client" });
     setStep("address");
   };
 
+  // Étape 3 : adresse
   const handleAddressSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -49,6 +64,7 @@ export default function LeadChatbot() {
     setStep("phone");
   };
 
+  // Étape 4 : téléphone
   const handlePhoneSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -58,9 +74,12 @@ export default function LeadChatbot() {
     setStep("confirm");
   };
 
+  // Étape 5 : confirmation + envoi
   const handleConfirm = async () => {
     setIsLoading(true);
+
     const payload = {
+      prenom: lead.prenom,
       problem: lead.problem,
       address: lead.address,
       phone: lead.phone,
@@ -68,7 +87,25 @@ export default function LeadChatbot() {
       source: "chatbot_site",
     };
 
-    // Envoi vers le webhook n8n si configuré
+    // 1. Envoi vers l'agent KAYTEK_URGENCE (qualification + Telegram)
+    try {
+      await fetch("/api/agents/kaytek-urgence", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: `${lead.prenom} a un problème : ${lead.problem}. Adresse : ${lead.address}. Téléphone : ${lead.phone}`,
+          prenom: lead.prenom,
+          adresse: lead.address,
+          telephone: lead.phone,
+          probleme: lead.problem,
+          canal: "chatbot_site",
+        }),
+      });
+    } catch {
+      // Silently fail
+    }
+
+    // 2. Envoi vers le webhook n8n si configuré
     if (BUSINESS_CONFIG.n8nWebhookUrl) {
       try {
         await fetch(BUSINESS_CONFIG.n8nWebhookUrl, {
@@ -77,11 +114,11 @@ export default function LeadChatbot() {
           body: JSON.stringify(payload),
         });
       } catch {
-        // Silently fail — lead toujours affiché
+        // Silently fail
       }
     }
 
-    // Tracking GA4
+    // 3. Tracking GA4
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "lead_qualified", {
         event_category: "lead",
@@ -95,6 +132,8 @@ export default function LeadChatbot() {
 
   const problemLabel =
     PROBLEMS.find((p) => p.value === lead.problem)?.label || lead.problem;
+
+  const prenomDisplay = lead.prenom && lead.prenom !== "Client" ? lead.prenom : null;
 
   return (
     <>
@@ -126,6 +165,8 @@ export default function LeadChatbot() {
 
           {/* Corps */}
           <div className="p-4 max-h-96 overflow-y-auto">
+
+            {/* ÉTAPE 1 — Problème */}
             {step === "welcome" && (
               <div className="space-y-4">
                 <div className="bg-gray-100 rounded-xl rounded-tl-none p-3 text-sm text-gray-800">
@@ -146,11 +187,45 @@ export default function LeadChatbot() {
               </div>
             )}
 
-            {step === "address" && (
+            {/* ÉTAPE 2 — Prénom */}
+            {step === "prenom" && (
               <div className="space-y-4">
                 <div className="bg-orange-50 rounded-xl rounded-tl-none p-3 text-sm text-orange-900">
                   <strong>{problemLabel}</strong> — compris.
                   <br />
+                  Comment vous appelez-vous ?
+                </div>
+                <form onSubmit={handlePrenomSubmit} className="space-y-2">
+                  <input
+                    name="prenom"
+                    type="text"
+                    placeholder="Votre prénom (ex: Julie)"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    autoFocus
+                    maxLength={40}
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-orange-500 text-white rounded-lg py-2.5 text-sm font-bold hover:bg-orange-600"
+                  >
+                    Continuer →
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setLead({ ...lead, prenom: "Client" }); setStep("address"); }}
+                    className="w-full text-xs text-gray-400 hover:text-gray-600 py-1"
+                  >
+                    Passer cette étape
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* ÉTAPE 3 — Adresse */}
+            {step === "address" && (
+              <div className="space-y-4">
+                <div className="bg-gray-100 rounded-xl rounded-tl-none p-3 text-sm text-gray-800">
+                  {prenomDisplay ? `Merci ${prenomDisplay} !` : "Compris !"}<br />
                   Quelle est votre adresse exacte (rue + ville) ?
                 </div>
                 <form onSubmit={handleAddressSubmit} className="space-y-2">
@@ -173,6 +248,7 @@ export default function LeadChatbot() {
               </div>
             )}
 
+            {/* ÉTAPE 4 — Téléphone */}
             {step === "phone" && (
               <div className="space-y-4">
                 <div className="bg-gray-100 rounded-xl rounded-tl-none p-3 text-sm text-gray-800">
@@ -200,21 +276,19 @@ export default function LeadChatbot() {
               </div>
             )}
 
+            {/* ÉTAPE 5 — Récapitulatif */}
             {step === "confirm" && (
               <div className="space-y-4">
                 <div className="bg-gray-100 rounded-xl rounded-tl-none p-3 text-sm text-gray-800">
-                  Voici le récapitulatif de votre demande :
+                  Récapitulatif de votre demande :
                 </div>
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 text-sm space-y-1">
-                  <p>
-                    <strong>Problème :</strong> {problemLabel}
-                  </p>
-                  <p>
-                    <strong>Adresse :</strong> {lead.address}
-                  </p>
-                  <p>
-                    <strong>Téléphone :</strong> {lead.phone}
-                  </p>
+                  {prenomDisplay && (
+                    <p><strong>Prénom :</strong> {lead.prenom}</p>
+                  )}
+                  <p><strong>Problème :</strong> {problemLabel}</p>
+                  <p><strong>Adresse :</strong> {lead.address}</p>
+                  <p><strong>Téléphone :</strong> {lead.phone}</p>
                 </div>
                 <div className="space-y-2">
                   <button
@@ -234,12 +308,15 @@ export default function LeadChatbot() {
               </div>
             )}
 
+            {/* ÉTAPE 6 — Confirmation */}
             {step === "done" && (
               <div className="space-y-4 text-center">
                 <div className="text-4xl">✅</div>
                 <div className="text-sm text-gray-800">
-                  <strong>Demande reçue !</strong>
-                  <br />
+                  {prenomDisplay
+                    ? <><strong>Merci {lead.prenom} !</strong><br /></>
+                    : <><strong>Demande reçue !</strong><br /></>
+                  }
                   Notre serrurier vous rappelle dans les{" "}
                   <strong>5 minutes</strong>. Restez disponible au {lead.phone}.
                 </div>
