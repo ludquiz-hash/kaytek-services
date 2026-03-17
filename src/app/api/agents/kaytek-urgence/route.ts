@@ -14,6 +14,7 @@ import {
   runDailyAnalysis,
   getStats,
 } from "@/lib/agents/memory";
+import { sendTelegram, formatUrgenceAlert } from "@/lib/agents/telegram";
 
 // ─── Zones valides ────────────────────────────────────────────────────────────
 const ZONES_VALIDES = [
@@ -291,6 +292,24 @@ export async function POST(req: NextRequest) {
     // Log
     addImprovementLog(`📥 Lead [${memoryEntry.id}] score=${score} action=${action} ville=${zone_detectee}`);
 
+    // ── Alerte Telegram si score >= 7 (directement ici, pas besoin de route séparée) ──
+    let telegram_sent = false;
+    if (score >= 7) {
+      const telegramMsg = formatUrgenceAlert({
+        prenom: body.prenom ?? "Client",
+        adresse: body.adresse ?? body.address ?? zone_detectee,
+        probleme: probleme.replace(/_/g, " "),
+        telephone: body.telephone ?? body.phone ?? "Non renseigné",
+        score,
+        canal,
+        ville: zone_detectee,
+      });
+      telegram_sent = await sendTelegram(telegramMsg);
+      addImprovementLog(
+        `📲 Telegram [${memoryEntry.id}] ${telegram_sent ? "✅ envoyé" : "❌ échec"} score=${score}`
+      );
+    }
+
     // Résultat JSON strict
     const result = {
       urgence_reelle: score >= 7,
@@ -308,7 +327,7 @@ export async function POST(req: NextRequest) {
       lecon,
       pattern_nouveau,
       lead_id: memoryEntry.id,
-      // Déclencher agent avis si intervention confirmée
+      telegram_sent,
       trigger_avis_apres_intervention: score >= 5 && zone_valide,
     };
 
