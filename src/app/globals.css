@@ -2,10 +2,11 @@
 
 /* Masquer le badge "Made with Kilo" */
 [data-kilo-badge],
-[class*="kilo-badge"],
-[id*="kilo-badge"],
+[class*="kilo"],
+[id*="kilo"],
 a[href*="kilo.ai"],
-a[href*="kilocode"] {
+a[href*="kilocode"],
+a[href*="kilo.io"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;

@@ -108,6 +108,45 @@ gtag('config', 'AW-11416158362/nRUOCMuhqc0bEJqB08Mq', {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
+        {/* ── Suppression badge Kilo ── */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+  function removeKiloBadge(){
+    var selectors=[
+      '[data-kilo-badge]','[class*="kilo"]','[id*="kilo"]',
+      'a[href*="kilo.ai"]','a[href*="kilocode"]',
+      'div[style*="position: fixed"][style*="bottom"]',
+      'div[style*="position:fixed"][style*="bottom"]'
+    ];
+    selectors.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        var txt=el.innerText||el.textContent||'';
+        if(txt.toLowerCase().indexOf('kilo')!==-1||txt.toLowerCase().indexOf('made with')!==-1){
+          el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;';
+        }
+      });
+    });
+    // Cibler aussi par contenu texte dans tous les fixed elements
+    document.querySelectorAll('*').forEach(function(el){
+      if(window.getComputedStyle(el).position==='fixed'){
+        var txt=el.innerText||el.textContent||'';
+        if(txt.toLowerCase().indexOf('made with kilo')!==-1){
+          el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;';
+        }
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded',removeKiloBadge);
+  setTimeout(removeKiloBadge,500);
+  setTimeout(removeKiloBadge,1500);
+  var obs=new MutationObserver(removeKiloBadge);
+  document.addEventListener('DOMContentLoaded',function(){
+    obs.observe(document.body,{childList:true,subtree:true});
+  });
+})();`,
+          }}
+        />
       </head>
 
       <body className={`${geistSans.variable} antialiased bg-white text-gray-900`}>
