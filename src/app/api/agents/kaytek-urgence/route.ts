@@ -259,8 +259,9 @@ export async function POST(req: NextRequest) {
     // Déterminer action
     let action: string;
     let priorite: string;
-    if (score >= 8) { action = "APPELER_IMMÉDIAT"; priorite = "CRITIQUE"; }
-    else if (score >= 5) { action = "RÉPONDRE_EMAIL"; priorite = "HAUTE"; }
+    if (score >= 9) { action = "APPELER_IMMÉDIAT"; priorite = "CRITIQUE"; }
+    else if (score >= 7) { action = "APPELER_IMMÉDIAT"; priorite = "HAUTE"; }
+    else if (score >= 5) { action = "RÉPONDRE_EMAIL"; priorite = "NORMALE"; }
     else if (score >= 2) { action = "DEVIS"; priorite = "NORMALE"; }
     else { action = "QUARANTAINE"; priorite = "IGNORER"; }
 
