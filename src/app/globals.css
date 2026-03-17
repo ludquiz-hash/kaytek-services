@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Masquer le badge "Made with Kilo" */
+[data-kilo-badge],
+[class*="kilo-badge"],
+[id*="kilo-badge"],
+a[href*="kilo.ai"],
+a[href*="kilocode"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
