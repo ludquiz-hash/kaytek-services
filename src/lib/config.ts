@@ -15,7 +15,7 @@ export const BUSINESS_CONFIG = {
   availability: "24h/24, 7j/7, 365j/an",
   priceFrom: "69",
   // Lien vers la page d'avis Google (à remplacer par votre vrai lien)
-  googleReviewLink: "https://g.page/r/VOTRE_ID_FICHE/review",
+  googleReviewLink: "https://www.google.com/maps/place/?q=place_id:ChIJTRg52fDNYGoRB4cVn5mgoYY",
   // URL du webhook n8n pour recevoir les leads
   n8nWebhookUrl: process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "",
 };

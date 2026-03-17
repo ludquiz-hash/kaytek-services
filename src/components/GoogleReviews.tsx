@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const GOOGLE_REVIEW_LINK =
-  "https://search.google.com/local/writereview?placeid=ChIJTRg52fDNYGoRB4cVn5mgoYY";
+  "https://www.google.com/maps/place/?q=place_id:ChIJTRg52fDNYGoRB4cVn5mgoYY";
 
 interface Review {
   author: string;
