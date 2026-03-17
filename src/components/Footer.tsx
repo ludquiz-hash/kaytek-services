@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BUSINESS_CONFIG, ZONES_TOULOUSE, ZONES_BAZIEGE, SERVICES } from "@/lib/config";
+import { ZONES_TOULOUSE, ZONES_BAZIEGE, SERVICES } from "@/lib/config";
+import { PHONE_DISPLAY, PHONE_HREF } from "./PhoneButton";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -13,19 +14,12 @@ export default function Footer() {
 
           {/* Bloc entreprise */}
           <div className="md:col-span-1">
-            <h3 className="text-white font-bold text-lg mb-3">
-              {BUSINESS_CONFIG.name}
-            </h3>
+            <h3 className="text-white font-bold text-lg mb-3">Kaytek Services</h3>
             <p className="text-sm leading-relaxed mb-3">
-              Serrurier agréé à Toulouse et Baziège. Intervention{" "}
-              {BUSINESS_CONFIG.interventionDelay},{" "}
-              {BUSINESS_CONFIG.availability}.
+              Serrurier urgence à Toulouse et Baziège. Intervention 20 à 40 min, 24h/24, 7j/7, 365j/an.
             </p>
-            <a
-              href={BUSINESS_CONFIG.phoneHref}
-              className="text-orange-400 font-bold text-lg hover:text-orange-300"
-            >
-              📞 {BUSINESS_CONFIG.phone}
+            <a href={PHONE_HREF} className="text-orange-400 font-bold text-lg hover:text-orange-300">
+              📞 {PHONE_DISPLAY}
             </a>
           </div>
 
@@ -35,10 +29,7 @@ export default function Footer() {
             <ul className="space-y-1 text-sm">
               {SERVICES.map((s) => (
                 <li key={s.slug}>
-                  <Link
-                    href={`/services/${s.slug}`}
-                    className="hover:text-orange-400 transition-colors"
-                  >
+                  <Link href={`/services/${s.slug}`} className="hover:text-orange-400 transition-colors">
                     {s.name}
                   </Link>
                 </li>
@@ -48,16 +39,11 @@ export default function Footer() {
 
           {/* Zone Toulouse */}
           <div>
-            <h3 className="text-white font-bold text-base mb-3">
-              Zone Toulouse (20 km)
-            </h3>
+            <h3 className="text-white font-bold text-base mb-3">Zone Toulouse (20 km)</h3>
             <ul className="space-y-1 text-xs">
               {toulousePreview.map((z) => (
                 <li key={z.slug}>
-                  <Link
-                    href={`/serrurier-urgence/${z.slug}`}
-                    className="hover:text-orange-400 transition-colors"
-                  >
+                  <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400 transition-colors">
                     {z.name}
                   </Link>
                 </li>
@@ -72,16 +58,11 @@ export default function Footer() {
 
           {/* Zone Baziège */}
           <div>
-            <h3 className="text-white font-bold text-base mb-3">
-              Zone Baziège (20 km)
-            </h3>
+            <h3 className="text-white font-bold text-base mb-3">Zone Baziège (20 km)</h3>
             <ul className="space-y-1 text-xs">
               {baziegePreview.map((z) => (
                 <li key={z.slug}>
-                  <Link
-                    href={`/serrurier-urgence/${z.slug}`}
-                    className="hover:text-orange-400 transition-colors"
-                  >
+                  <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400 transition-colors">
                     {z.name}
                   </Link>
                 </li>
@@ -95,15 +76,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bloc zones complètes — bon pour le SEO */}
+        {/* Toutes les villes — SEO */}
         <div className="border-t border-gray-700 pt-6 mb-6">
           <p className="text-xs text-gray-500 leading-relaxed">
             <strong className="text-gray-400">Zones d&apos;intervention Toulouse :</strong>{" "}
             {ZONES_TOULOUSE.map((z, i) => (
               <span key={z.slug}>
-                <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400">
-                  {z.name}
-                </Link>
+                <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400">{z.name}</Link>
                 {i < ZONES_TOULOUSE.length - 1 && ", "}
               </span>
             ))}
@@ -112,9 +91,7 @@ export default function Footer() {
             <strong className="text-gray-400">Zones d&apos;intervention Baziège :</strong>{" "}
             {ZONES_BAZIEGE.map((z, i) => (
               <span key={z.slug}>
-                <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400">
-                  {z.name}
-                </Link>
+                <Link href={`/serrurier-urgence/${z.slug}`} className="hover:text-orange-400">{z.name}</Link>
                 {i < ZONES_BAZIEGE.length - 1 && ", "}
               </span>
             ))}
@@ -122,16 +99,10 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-gray-500">
-          <p>
-            © {year} {BUSINESS_CONFIG.name} — Tous droits réservés
-          </p>
+          <p>© {year} Kaytek Services — Tous droits réservés</p>
           <div className="flex gap-4">
-            <Link href="/mentions-legales" className="hover:text-gray-300">
-              Mentions légales
-            </Link>
-            <Link href="/sitemap.xml" className="hover:text-gray-300">
-              Sitemap
-            </Link>
+            <Link href="/mentions-legales" className="hover:text-gray-300">Mentions légales</Link>
+            <Link href="/sitemap.xml" className="hover:text-gray-300">Sitemap</Link>
           </div>
         </div>
       </div>
