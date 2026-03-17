@@ -16,7 +16,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-3 flex-shrink-0">
           <Image
             src="/logo.png"
-            alt="Kaytek Services — Serrurier Toulouse"
+            alt="Kaytek Services — Serrurier urgence Toulouse et Baziège"
             width={44}
             height={44}
             className="rounded-xl"

@@ -141,7 +141,7 @@ export default function GoogleReviews() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/reviews")
+    fetch("/api/google-reviews")
       .then((r) => r.json())
       .then((d) => {
         if (d.error) {

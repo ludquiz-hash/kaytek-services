@@ -11,12 +11,13 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.kaytek-services.fr"),
   title: {
     default: "Serrurier Urgence Toulouse — Dépannage 24h/7j | Kaytek Services",
     template: "%s | Kaytek Services",
   },
   description:
-    "Serrurier urgence à Toulouse et Baziège. Intervention rapide porte claquée, clé cassée, serrure bloquée. Appelez le 05 82 95 17 42.",
+    "Serrurier urgence à Toulouse et Baziège. Intervention en 20 à 40 min, 24h/24 7j/7. Porte claquée, clé cassée, serrure bloquée. Devis gratuit : 05 82 95 17 42.",
   keywords: [
     "serrurier urgence Toulouse",
     "serrurier Toulouse",
@@ -26,31 +27,30 @@ export const metadata: Metadata = {
     "Kaytek Services",
     "serrurier Haute-Garonne",
   ],
-  // ── Icônes ──
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon-192.png",      sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png",      sizes: "512x512", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     shortcut: "/favicon-32x32.png",
   },
-  // ── Open Graph ──
   openGraph: {
     type: "website",
     locale: "fr_FR",
     siteName: "Kaytek Services",
     url: "https://www.kaytek-services.fr",
+    title: "Serrurier Urgence Toulouse 24h/7j | Kaytek Services",
+    description:
+      "Intervention rapide 20-40 min. Porte claquée, clé cassée. 05 82 95 17 42.",
     images: [
       {
-        url: "/icon-512.png",
+        url: "/logo.png",
         width: 512,
         height: 512,
-        alt: "Kaytek Services — Serrurier Urgence Toulouse",
+        alt: "Kaytek Services — Serrurier urgence Toulouse et Baziège",
       },
     ],
   },
@@ -60,21 +60,45 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // ── Schema JSON-LD complet Locksmith ──────────────────────────
   const schema = {
     "@context": "https://schema.org",
     "@type": "Locksmith",
     name: "Kaytek Services",
-    telephone: "0582951742",
+    image: "https://www.kaytek-services.fr/logo.png",
+    telephone: "+330582951742",
     url: "https://www.kaytek-services.fr",
-    areaServed: ["Toulouse", "Baziège"],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Toulouse",
+      addressRegion: "Occitanie",
+      postalCode: "31000",
+      addressCountry: "FR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 43.5354974,
+      longitude: 1.4924266,
+    },
     openingHours: "Mo-Su 00:00-24:00",
     priceRange: "€€",
+    areaServed: [
+      "Toulouse", "Baziège", "Blagnac", "Colomiers",
+      "Castanet-Tolosan", "Ramonville-Saint-Agne",
+      "Muret", "Saint-Orens-de-Gameville", "Labège",
+      "Escalquens", "Tournefeuille", "Portet-sur-Garonne",
+      "Balma", "L'Union", "Launaguet", "Cugnaux",
+    ],
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: "5",
       reviewCount: "16",
       bestRating: "5",
+      worstRating: "1",
     },
+    sameAs: [
+      "https://www.google.com/maps?cid=9664734764436464391",
+    ],
   };
 
   return (
@@ -103,7 +127,7 @@ gtag('config', 'AW-11416158362/nRUOCMuhqc0bEJqB08Mq', {
 });`,
           }}
         />
-        {/* ── Schema JSON-LD ── */}
+        {/* ── Schema JSON-LD Locksmith ── */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
@@ -113,37 +137,14 @@ gtag('config', 'AW-11416158362/nRUOCMuhqc0bEJqB08Mq', {
           dangerouslySetInnerHTML={{
             __html: `(function(){
   function removeKiloBadge(){
-    var selectors=[
-      '[data-kilo-badge]','[class*="kilo"]','[id*="kilo"]',
-      'a[href*="kilo.ai"]','a[href*="kilocode"]',
-      'div[style*="position: fixed"][style*="bottom"]',
-      'div[style*="position:fixed"][style*="bottom"]'
-    ];
-    selectors.forEach(function(sel){
-      document.querySelectorAll(sel).forEach(function(el){
-        var txt=el.innerText||el.textContent||'';
-        if(txt.toLowerCase().indexOf('kilo')!==-1||txt.toLowerCase().indexOf('made with')!==-1){
-          el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;';
-        }
-      });
-    });
-    // Cibler aussi par contenu texte dans tous les fixed elements
-    document.querySelectorAll('*').forEach(function(el){
-      if(window.getComputedStyle(el).position==='fixed'){
-        var txt=el.innerText||el.textContent||'';
-        if(txt.toLowerCase().indexOf('made with kilo')!==-1){
-          el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;';
-        }
-      }
-    });
+    var selectors=['[data-kilo-badge]','[class*="kilo"]','[id*="kilo"]','a[href*="kilo.ai"]','a[href*="kilocode"]'];
+    selectors.forEach(function(sel){document.querySelectorAll(sel).forEach(function(el){var txt=el.innerText||el.textContent||'';if(txt.toLowerCase().indexOf('kilo')!==-1||txt.toLowerCase().indexOf('made with')!==-1){el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;';}});});
+    document.querySelectorAll('*').forEach(function(el){if(window.getComputedStyle(el).position==='fixed'){var txt=el.innerText||el.textContent||'';if(txt.toLowerCase().indexOf('made with kilo')!==-1){el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;';}}});
   }
   document.addEventListener('DOMContentLoaded',removeKiloBadge);
-  setTimeout(removeKiloBadge,500);
-  setTimeout(removeKiloBadge,1500);
+  setTimeout(removeKiloBadge,500);setTimeout(removeKiloBadge,1500);
   var obs=new MutationObserver(removeKiloBadge);
-  document.addEventListener('DOMContentLoaded',function(){
-    obs.observe(document.body,{childList:true,subtree:true});
-  });
+  document.addEventListener('DOMContentLoaded',function(){obs.observe(document.body,{childList:true,subtree:true});});
 })();`,
           }}
         />

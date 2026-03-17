@@ -10,8 +10,16 @@ import { SERVICE_ZONES_UNIQUE, ZONES_TOULOUSE, ZONES_BAZIEGE, SERVICES } from "@
 export const metadata: Metadata = {
   title: "Serrurier Urgence Toulouse — Dépannage 24h/7j | Kaytek Services",
   description:
-    "Serrurier urgence à Toulouse et Baziège. Intervention rapide porte claquée, clé cassée, serrure bloquée. Appelez le 05 82 95 17 42.",
+    "Serrurier urgence à Toulouse et Baziège. Intervention en 20 à 40 min, 24h/24 7j/7. Porte claquée, clé cassée, serrure bloquée. Devis gratuit : 05 82 95 17 42.",
   alternates: { canonical: "https://www.kaytek-services.fr" },
+  openGraph: {
+    title: "Serrurier Urgence Toulouse 24h/7j | Kaytek Services",
+    description:
+      "Intervention rapide 20-40 min. Porte claquée, clé cassée, serrure bloquée. Appelez le 05 82 95 17 42.",
+    url: "https://www.kaytek-services.fr",
+    locale: "fr_FR",
+    type: "website",
+  },
 };
 
 function UrgenceBadge() {
