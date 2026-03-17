@@ -15,7 +15,7 @@ export const BUSINESS_CONFIG = {
   availability: "24h/24, 7j/7, 365j/an",
   priceFrom: "69",
   // Lien vers la page d'avis Google (à remplacer par votre vrai lien)
-  googleReviewLink: "https://www.google.com/maps/place/?q=place_id:ChIJTRg52fDNYGoRB4cVn5mgoYY",
+  googleReviewLink: "https://www.google.com/maps/place/Kaytek.Services+%E2%80%93+Serrurier/@43.5356279,1.3276206,11z/data=!3m1!4b1!4m6!3m5!1s0x860fcdf0d439184d:0x861fa0999f158707!8m2!3d43.5354974!4d1.4924266!16s%2Fg%2F11zkd821bb?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D",
   // URL du webhook n8n pour recevoir les leads
   n8nWebhookUrl: process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "",
 };

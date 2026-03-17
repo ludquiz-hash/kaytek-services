@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+const GOOGLE_MAPS_LINK =
+  "https://www.google.com/maps/place/Kaytek.Services+%E2%80%93+Serrurier/@43.5356279,1.3276206,11z/data=!3m1!4b1!4m6!3m5!1s0x860fcdf0d439184d:0x861fa0999f158707!8m2!3d43.5354974!4d1.4924266!16s%2Fg%2F11zkd821bb?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D";
 const GOOGLE_REVIEW_LINK =
-  "https://www.google.com/maps/place/?q=place_id:ChIJTRg52fDNYGoRB4cVn5mgoYY";
+  "https://www.google.com/maps/place/Kaytek.Services+%E2%80%93+Serrurier/@43.5356279,1.3276206,11z/data=!3m1!4b1!4m6!3m5!1s0x860fcdf0d439184d:0x861fa0999f158707!8m2!3d43.5354974!4d1.4924266!16s%2Fg%2F11zkd821bb?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D";
 
 interface Review {
   author: string;
