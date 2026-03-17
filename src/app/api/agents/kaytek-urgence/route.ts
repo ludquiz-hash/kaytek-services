@@ -35,7 +35,7 @@ const ZONES_VALIDES = [
 
 // ─── Moteur de scoring adaptatif ─────────────────────────────────────────────
 
-function computeScore(message: string): {
+function computeScore(message: string, problemeExplicite?: string): {
   score: number;
   confiance: number;
   patterns_detectes: string[];
@@ -98,7 +98,7 @@ function computeScore(message: string): {
   // ── Mots devis (réducteurs) ──
   Object.entries(weights.mots_devis).forEach(([mot, poids]) => {
     if (msg.includes(mot)) {
-      score += poids; // poids négatifs
+      score += poids;
       patterns_detectes.push(`devis:${mot}`);
     }
   });
@@ -110,7 +110,59 @@ function computeScore(message: string): {
     patterns_detectes.push(`heure_nuit:${heureNuitMatch[0]}`);
   }
 
-  // ── Apprentissage actif : comparer avec les patterns connus ──
+  // ── Détection problème (message + champ explicite du chatbot) ──
+  let probleme = "autre";
+  if (
+    problemeExplicite === "porte_claquee" ||
+    msg.includes("claqu") || msg.includes("oubli") || msg.includes("cle a l") ||
+    msg.includes("cle interieur") || msg.includes("cles interieur")
+  ) probleme = "porte_claquee";
+  else if (msg.includes("cass") && msg.includes("cl")) probleme = "cle_cassee";
+  else if (msg.includes("bloqu") || msg.includes("gripp") || msg.includes("tourne")) probleme = "serrure_bloquee";
+  else if (msg.includes("cambriol") || msg.includes("forc") || msg.includes("effraction")) probleme = "post_cambriolage";
+  else if (msg.includes("remplac") || msg.includes("install") || msg.includes("changer")) probleme = "remplacement";
+  // Forcer le problème si passé explicitement depuis le chatbot
+  if (problemeExplicite && problemeExplicite !== "autre") probleme = problemeExplicite;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // RÈGLES DE PLANCHER (score minimum garanti par type de problème + zone)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // Règle 1 : Porte claquée en zone valide → score minimum 7
+  if (probleme === "porte_claquee" && zone_valide && score < 7) {
+    score = 7;
+    patterns_detectes.push("plancher:porte_claquee_zone_valide");
+  }
+
+  // Règle 2 : Post-cambriolage en zone valide → score minimum 8
+  if (probleme === "post_cambriolage" && zone_valide && score < 8) {
+    score = 8;
+    patterns_detectes.push("plancher:post_cambriolage_zone_valide");
+  }
+
+  // Règle 3 : Clé cassée en zone valide → score minimum 7
+  if (probleme === "cle_cassee" && zone_valide && score < 7) {
+    score = 7;
+    patterns_detectes.push("plancher:cle_cassee_zone_valide");
+  }
+
+  // Règle 4 : Serrure bloquée en zone valide → score minimum 6
+  if (probleme === "serrure_bloquee" && zone_valide && score < 6) {
+    score = 6;
+    patterns_detectes.push("plancher:serrure_bloquee_zone_valide");
+  }
+
+  // Règle 5 : Mots de contexte critique → forcer score >= 9
+  const motsCritiquesContexte = ["bebe", "enfant", "fils", "fille", "nuit", "minuit", "froid", "medicament", "dehors"];
+  const hasCritiqueContexte = motsCritiquesContexte.some((m) => msg.includes(m));
+  if (hasCritiqueContexte && zone_valide && score < 9) {
+    score = 9;
+    patterns_detectes.push("plancher:contexte_critique");
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ── Apprentissage actif ──
   const historique = getLeadMemory();
   const patternsSimilaires = historique.filter((l) => {
     const msgHist = l.message_original.toLowerCase();
@@ -125,16 +177,8 @@ function computeScore(message: string): {
   // ── Clamper entre 0 et 10 ──
   score = Math.min(10, Math.max(0, score));
 
-  // ── Confiance basée sur la richesse du message ──
+  // ── Confiance ──
   const confiance = Math.min(0.99, 0.4 + patterns_detectes.length * 0.08);
-
-  // ── Détection problème ──
-  let probleme = "autre";
-  if (msg.includes("claqu") || msg.includes("oubli") || msg.includes("dehors")) probleme = "porte_claquee";
-  else if (msg.includes("cass") && msg.includes("cl")) probleme = "cle_cassee";
-  else if (msg.includes("bloqu") || msg.includes("gripp") || msg.includes("tourne")) probleme = "serrure_bloquee";
-  else if (msg.includes("cambriol") || msg.includes("forc") || msg.includes("effraction")) probleme = "post_cambriolage";
-  else if (msg.includes("remplac") || msg.includes("install") || msg.includes("changer")) probleme = "remplacement";
 
   // ── Contexte émotionnel ──
   let contexte_emotionnel = "calme";
@@ -199,16 +243,18 @@ export async function POST(req: NextRequest) {
     const message: string = body.message ?? body.text ?? body.content ?? "";
     const canal: string = body.canal ?? body.source ?? "webhook";
     const heureActuelle = new Date().getHours();
+    // Problème explicite envoyé par le chatbot (ex: "porte_claquee")
+    const problemeExplicite: string | undefined = body.probleme ?? undefined;
 
     if (!message.trim()) {
       return NextResponse.json({ error: "message requis" }, { status: 400 });
     }
 
-    // Calcul du score
+    // Calcul du score — avec problème explicite du chatbot
     const {
       score, confiance, patterns_detectes, pattern_nouveau,
       zone_detectee, zone_valide, probleme, contexte_emotionnel,
-    } = computeScore(message);
+    } = computeScore(message, problemeExplicite);
 
     // Déterminer action
     let action: string;
