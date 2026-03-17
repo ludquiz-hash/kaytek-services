@@ -201,7 +201,9 @@ export default async function LocalPage({ params }: PageProps) {
           </nav>
 
           <div className="inline-block bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
-            Zone {centreLabel} — {centreDistance}
+            {slug === "toulouse"
+              ? "Basé à Toulouse — intervention immédiate"
+              : `Zone ${centreLabel} — ${centreDistance}`}
           </div>
 
           <h1 className="text-2xl md:text-4xl font-black leading-tight mb-4">
@@ -212,9 +214,11 @@ export default async function LocalPage({ params }: PageProps) {
           <p className="text-gray-300 text-lg mb-6 max-w-2xl">
             <strong className="text-white">Kaytek Services</strong> intervient à{" "}
             <strong className="text-white">{zone.name}</strong> pour tous vos
-            dépannages : porte claquée, clé cassée, serrure bloquée. Depuis{" "}
-            {centreLabel} ({centreDistance}), disponible{" "}
-            <strong className="text-white">{BUSINESS_CONFIG.availability}</strong>.
+            dépannages : porte claquée, clé cassée, serrure bloquée.{" "}
+            {slug === "toulouse"
+              ? <>Basé à Toulouse, disponible <strong className="text-white">{BUSINESS_CONFIG.availability}</strong>.</>
+              : <>Depuis {centreLabel} ({centreDistance}), disponible <strong className="text-white">{BUSINESS_CONFIG.availability}</strong>.</>
+            }
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 items-start">
@@ -224,10 +228,6 @@ export default async function LocalPage({ params }: PageProps) {
             >
               📞 {PHONE_DISPLAY}
             </a>
-            <div className="text-sm text-gray-400 flex items-center gap-2 py-2">
-              <span className="text-green-400 text-lg">⚡</span>
-              Intervention en {BUSINESS_CONFIG.interventionDelay}
-            </div>
           </div>
         </div>
       </section>
