@@ -9,12 +9,19 @@ export async function sendTelegram(message: string): Promise<boolean> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
+  console.log("[TELEGRAM] sendTelegram appelé");
+  console.log("[TELEGRAM] token présent:", !!token);
+  console.log("[TELEGRAM] chatId présent:", !!chatId);
+
   if (!token || !chatId) {
-    console.warn("[TELEGRAM] Token ou Chat ID manquant — message non envoyé");
+    console.error("[TELEGRAM] ERREUR CRITIQUE — Token ou Chat ID manquant dans les variables d'environnement Netlify");
+    console.error("[TELEGRAM] TELEGRAM_BOT_TOKEN:", token ? "OK" : "MANQUANT");
+    console.error("[TELEGRAM] TELEGRAM_CHAT_ID:", chatId ? "OK" : "MANQUANT");
     return false;
   }
 
   try {
+    console.log("[TELEGRAM] Envoi vers chatId:", chatId);
     const res = await fetch(`${TELEGRAM_API}${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,8 +33,26 @@ export async function sendTelegram(message: string): Promise<boolean> {
       }),
     });
     const data = await res.json();
-    return data.ok === true;
-  } catch {
+    console.log("[TELEGRAM] Réponse API:", JSON.stringify(data));
+    if (!data.ok) {
+      console.error("[TELEGRAM] ECHEC envoi — erreur Telegram:", data.description);
+      // Tentative 2 sans parse_mode en cas d'erreur HTML
+      const res2 = await fetch(`${TELEGRAM_API}${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message.replace(/<[^>]*>/g, ""),
+        }),
+      });
+      const data2 = await res2.json();
+      console.log("[TELEGRAM] Tentative 2:", JSON.stringify(data2));
+      return data2.ok === true;
+    }
+    console.log("[TELEGRAM] ✅ Message envoyé avec succès");
+    return true;
+  } catch (err) {
+    console.error("[TELEGRAM] Exception:", String(err));
     return false;
   }
 }
