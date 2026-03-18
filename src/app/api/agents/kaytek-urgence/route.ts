@@ -64,8 +64,11 @@ function computeScore(message: string, problemeExplicite?: string): {
 
   // ── Détection zone ──
   const zoneMatch = ZONES_VALIDES.find((z) => msg.includes(z));
-  const zone_detectee = zoneMatch ?? "non_detectee";
-  const zone_valide = !!zoneMatch;
+  // Si le lead vient du chatbot du site (canal chatbot_site) avec un problème explicite
+  // → toujours considéré comme zone valide (le site Kaytek cible uniquement Toulouse/Baziège)
+  const zone_valide_chatbot = problemeExplicite && problemeExplicite !== "autre";
+  const zone_detectee = zoneMatch ?? (zone_valide_chatbot ? "toulouse" : "non_detectee");
+  const zone_valide = !!zoneMatch || !!zone_valide_chatbot;
 
   if (!zone_valide) {
     score -= 2;
