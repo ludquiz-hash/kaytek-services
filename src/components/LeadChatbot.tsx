@@ -88,24 +88,39 @@ export default function LeadChatbot() {
     };
 
     // 1. Envoi vers l'agent KAYTEK_URGENCE (qualification + Telegram)
-    try {
-      await fetch("/api/agents/kaytek-urgence", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: `${lead.prenom} a un problème : ${lead.problem}. Adresse : ${lead.address}. Téléphone : ${lead.phone}`,
-          prenom: lead.prenom,
-          adresse: lead.address,
-          telephone: lead.phone,
-          probleme: lead.problem,
-          canal: "chatbot_site",
-        }),
-      });
-    } catch {
-      // Silently fail
-    }
+    // Tentative 1 — appel principal avec retry automatique
+    const sendLead = async (retryCount = 0): Promise<void> => {
+      try {
+        const res = await fetch("/api/agents/kaytek-urgence", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: `${lead.prenom} a un problème : ${lead.problem}. Adresse : ${lead.address}. Téléphone : ${lead.phone}`,
+            prenom: lead.prenom,
+            adresse: lead.address,
+            telephone: lead.phone,
+            probleme: lead.problem,
+            canal: "chatbot_site",
+          }),
+        });
+        if (!res.ok && retryCount < 2) {
+          console.warn("[CHATBOT] Tentative", retryCount + 1, "échouée — retry dans 2s");
+          await new Promise(r => setTimeout(r, 2000));
+          return sendLead(retryCount + 1);
+        }
+      } catch (err) {
+        console.error("[CHATBOT] Erreur envoi lead:", err);
+        if (retryCount < 2) {
+          console.warn("[CHATBOT] Retry", retryCount + 1, "dans 2s");
+          await new Promise(r => setTimeout(r, 2000));
+          return sendLead(retryCount + 1);
+        }
+        console.error("[CHATBOT] Échec définitif après 3 tentatives — lead non envoyé");
+      }
+    };
+    await sendLead();
 
-    // 2. Envoi vers le webhook n8n si configuré
+    // 2. Envoi vers le webhook n8n si configuré (optionnel — non bloquant)
     if (BUSINESS_CONFIG.n8nWebhookUrl) {
       try {
         await fetch(BUSINESS_CONFIG.n8nWebhookUrl, {
@@ -113,8 +128,8 @@ export default function LeadChatbot() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-      } catch {
-        // Silently fail
+      } catch (err) {
+        console.warn("[CHATBOT] Webhook n8n non disponible:", err);
       }
     }
 
