@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 
 export const revalidate = 3600;
 
-// Clés hardcodées en fallback si les variables d'env ne sont pas définies
-const API_KEY = process.env.GOOGLE_PLACES_API_KEY ?? "AIzaSyAuQkiriTzvweuoLVTWMYZrv3lDCiHM3xM";
+const API_KEY = process.env.GOOGLE_PLACES_API_KEY ?? "";
 const PLACE_ID = process.env.GOOGLE_PLACE_ID ?? "ChIJTRg52fDNYGoRB4cVn5mgoYY";
 const SITE_URL = "https://www.kaytek-services.fr";
 
