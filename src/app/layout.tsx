@@ -165,6 +165,12 @@ gtag('config', 'AW-11416158362/nRUOCMuhqc0bEJqB08Mq', {
         <main>{children}</main>
         <Footer />
         <LeadChatbot />
+        {/* Keep-alive : ping API toutes les 4 min pour éviter cold start Netlify */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){function p(){fetch('/api/agents/telegram-agent',{method:'GET',cache:'no-store'}).catch(function(){});}p();setInterval(p,240000);})();`,
+          }}
+        />
       </body>
     </html>
   );

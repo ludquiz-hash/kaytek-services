@@ -88,12 +88,15 @@ export default function LeadChatbot() {
     };
 
     // 1. Envoi vers l'agent KAYTEK_URGENCE (qualification + Telegram)
-    // Tentative 1 — appel principal avec retry automatique
+    // Timeout 10s + retry x3 pour gérer le cold start Netlify
     const sendLead = async (retryCount = 0): Promise<void> => {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
         const res = await fetch("/api/agents/kaytek-urgence", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
           body: JSON.stringify({
             message: `${lead.prenom} a un problème : ${lead.problem}. Adresse : ${lead.address}. Téléphone : ${lead.phone}`,
             prenom: lead.prenom,
@@ -103,19 +106,20 @@ export default function LeadChatbot() {
             canal: "chatbot_site",
           }),
         });
+        clearTimeout(timeoutId);
         if (!res.ok && retryCount < 2) {
-          console.warn("[CHATBOT] Tentative", retryCount + 1, "échouée — retry dans 2s");
-          await new Promise(r => setTimeout(r, 2000));
+          console.warn("[CHATBOT] HTTP", res.status, "— retry", retryCount + 1, "dans 3s");
+          await new Promise(r => setTimeout(r, 3000));
           return sendLead(retryCount + 1);
         }
       } catch (err) {
-        console.error("[CHATBOT] Erreur envoi lead:", err);
+        const isTimeout = err instanceof Error && err.name === "AbortError";
+        console.error("[CHATBOT]", isTimeout ? "TIMEOUT 10s" : "Erreur réseau", "— retry", retryCount + 1);
         if (retryCount < 2) {
-          console.warn("[CHATBOT] Retry", retryCount + 1, "dans 2s");
-          await new Promise(r => setTimeout(r, 2000));
+          await new Promise(r => setTimeout(r, 3000));
           return sendLead(retryCount + 1);
         }
-        console.error("[CHATBOT] Échec définitif après 3 tentatives — lead non envoyé");
+        console.error("[CHATBOT] Échec définitif après 3 tentatives");
       }
     };
     await sendLead();
